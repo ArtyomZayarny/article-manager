@@ -1,20 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  Req,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
+import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
+import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
+import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
+import { Role } from 'src/users/enums/role.enum';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
-import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
-import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
-import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
-import { Role } from 'src/users/enums/role.enum';
 
 @Controller('articles')
 export class ArticlesController {
@@ -26,9 +25,9 @@ export class ArticlesController {
     return this.articlesService.create(createArticleDto);
   }
 
+  @Auth(AuthType.Bearer)
   @Get()
-  findAll(@ActiveUser() user: ActiveUserData) {
-    console.log(user);
+  findAll() {
     return this.articlesService.findAll();
   }
 
@@ -47,4 +46,8 @@ export class ArticlesController {
   remove(@Param('id') id: string) {
     return this.articlesService.remove(+id);
   }
+
+  //pagination
+  //sorting
+  //search   /articles/?search='name'
 }
