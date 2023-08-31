@@ -1,26 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { Article } from './entities/article.entity';
 
 @Injectable()
 export class ArticlesService {
-  create(createArticleDto: CreateArticleDto) {
-    return 'This action adds a new article';
+  constructor(
+    @InjectRepository(Article)
+    private readonly articleRepository: Repository<Article>,
+  ) {}
+
+  async create(createArticleDto: CreateArticleDto) {
+    const article = await this.articleRepository.create(createArticleDto);
+    return await this.articleRepository.save(article);
   }
 
-  findAll() {
-    return `This action returns all articles`;
+  async findAll() {
+    return await this.articleRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} article`;
+  async findOne(id: number) {
+    const article = await this.articleRepository.findOne({
+      where: { id: +id },
+    });
+
+    if (!article) {
+      throw new NotFoundException(`Article #${id} not found`);
+    }
+
+    return article;
   }
 
-  update(id: number, updateArticleDto: UpdateArticleDto) {
-    return `This action updates a #${id} article`;
+  async update(id: number, updateArticleDto: UpdateArticleDto) {
+    const article = await this.articleRepository.preload({
+      id: +id,
+      ...updateArticleDto,
+    });
+
+    if (!article) {
+      throw new NotFoundException(`article #${id} not founded`);
+    }
+
+    return this.articleRepository.save(article);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} article`;
+  async remove(id: number) {
+    const article = await this.findOne(id);
+
+    if (!article) {
+      throw new NotFoundException(`article #${id} not founded`);
+    }
+    return this.articleRepository.remove(article);
   }
 }
