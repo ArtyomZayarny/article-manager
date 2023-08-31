@@ -22,19 +22,28 @@ export class ArticlesService {
   }
 
   async findOne(id: number) {
-    const coffee = await this.articleRepository.findOne({
+    const article = await this.articleRepository.findOne({
       where: { id: +id },
     });
 
-    if (!coffee) {
+    if (!article) {
       throw new NotFoundException(`Article #${id} not found`);
     }
 
-    return coffee;
+    return article;
   }
 
-  update(id: number, updateArticleDto: UpdateArticleDto) {
-    return `This action updates a #${id} article`;
+  async update(id: number, updateArticleDto: UpdateArticleDto) {
+    const article = await this.articleRepository.preload({
+      id: +id,
+      ...updateArticleDto,
+    });
+
+    if (!article) {
+      throw new NotFoundException(`article #${id} not founded`);
+    }
+
+    return this.articleRepository.save(article);
   }
 
   async remove(id: number) {
