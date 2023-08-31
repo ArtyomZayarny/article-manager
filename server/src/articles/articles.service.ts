@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -17,19 +17,28 @@ export class ArticlesService {
     return await this.articleRepository.save(article);
   }
 
-  findAll() {
-    return `This action returns all articles`;
+  async findAll() {
+    return await this.articleRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} article`;
+  async findOne(id: number) {
+    const coffee = await this.articleRepository.findOne({
+      where: { id: +id },
+    });
+
+    if (!coffee) {
+      throw new NotFoundException(`Article #${id} not found`);
+    }
+
+    return coffee;
   }
 
   update(id: number, updateArticleDto: UpdateArticleDto) {
     return `This action updates a #${id} article`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} article`;
+  async remove(id: number) {
+    const article = await this.findOne(id);
+    return this.articleRepository.remove(article);
   }
 }
