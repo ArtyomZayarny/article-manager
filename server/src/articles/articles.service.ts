@@ -48,6 +48,10 @@ export class ArticlesService {
 
   async remove(id: number) {
     const article = await this.findOne(id);
+
+    if (!article) {
+      throw new NotFoundException(`article #${id} not founded`);
+    }
     return this.articleRepository.remove(article);
   }
 }

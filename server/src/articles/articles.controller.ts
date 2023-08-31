@@ -25,7 +25,7 @@ export class ArticlesController {
     return this.articlesService.create(createArticleDto);
   }
 
-  @Auth(AuthType.Bearer)
+  @Auth(AuthType.None)
   @Get()
   findAll() {
     return this.articlesService.findAll();
@@ -35,6 +35,7 @@ export class ArticlesController {
   findOne(@Param('id') id: string) {
     return this.articlesService.findOne(+id);
   }
+
   @Roles(Role.Admin)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
@@ -46,8 +47,4 @@ export class ArticlesController {
   remove(@Param('id') id: string) {
     return this.articlesService.remove(+id);
   }
-
-  //pagination
-  //sorting
-  //search   /articles/?search='name'
 }
