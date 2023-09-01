@@ -3,5 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/ArtyomZayarny/article-manager.git",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently \"yarn server\" \"yarn client\"",
+    "server": "cd server && yarn start:dev",
+    "client": "cd client && yarn start"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.1"
+  }
 }

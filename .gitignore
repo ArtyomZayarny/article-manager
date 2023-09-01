@@ -3,5 +3,9 @@
 /server/.DS_Store
 /client/node_modules
 /client/.next
+/client/yarn.lock
 /client/.DS_Store
 .DS_Store
+/node_modules
+yarn-error.log
+yarn.lock
