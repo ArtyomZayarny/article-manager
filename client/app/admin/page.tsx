@@ -27,8 +27,8 @@ export default function AdminPage() {
     try {
       const res = await fetchData(
         'http://localhost:3001/authentication/sign-in',
-        data,
-        'POST'
+        'POST',
+        data
       );
       localStorage.setItem('accessToken', JSON.stringify(res?.accessToken));
       router.push('/admin/board');
