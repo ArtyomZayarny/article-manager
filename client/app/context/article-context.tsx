@@ -1,3 +1,4 @@
+'use client';
 import { IArticle } from '@/types';
 import { createContext, useCallback } from 'react';
 import { useArticles } from '../hooks/useArticles';

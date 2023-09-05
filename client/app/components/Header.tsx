@@ -1,10 +1,11 @@
-import Link from 'next/link';
+type Props = {
+  children: React.ReactNode;
+};
 
-export const Header = () => {
+export const Header = ({ children }: Props) => {
   return (
-    <header>
-      <h1>Header</h1>
-      <Link href={'/admin'}>Go to Admin</Link>
+    <header className={'bg-slate-400 px-6 flex justify-between p-6'}>
+      {children}
     </header>
   );
 };
