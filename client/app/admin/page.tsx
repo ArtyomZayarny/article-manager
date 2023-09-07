@@ -17,26 +17,26 @@ export default function AdminPage() {
     formState: { errors },
   } = useForm<Inputs>();
   const router = useRouter();
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       const res = await fetchData(
         'http://localhost:3001/authentication/sign-in',
         'POST',
-        data,
+        data
       );
-      if(res?.error) {
-        setError(res.message)
-        return 
+      if (res?.error) {
+        setError(res.message);
+        return;
       }
       localStorage.setItem('accessToken', JSON.stringify(res?.accessToken));
       router.push('/admin/board');
     } catch (error) {
       console.warn(error);
     }
-  }
-    
+  };
+
   useEffect(() => {
     if (localStorage.getItem('accessToken')) {
       redirect('/admin/board');
@@ -44,11 +44,8 @@ export default function AdminPage() {
   }, [watch]);
 
   const handleChange = () => {
-    console.log('eve')
-    setError('')
-  }
-
-  const password = register('password', {required: true })
+    setError('');
+  };
 
   return (
     <div className={'flex justify-center w-full  mt-10'}>
@@ -58,9 +55,9 @@ export default function AdminPage() {
       >
         <div className={'flex flex-col p-8'}>
           <label htmlFor='email' className={'mb-8 relative flex flex-col'}>
-            <input 
-             {...register('email', {required: true },)}
-             onChange={handleChange}
+            <input
+              {...register('email', { required: true })}
+              onChange={handleChange}
               placeholder='Please enter your email'
               className={'rounded-md w-full p-2'}
             />
@@ -75,7 +72,7 @@ export default function AdminPage() {
             <input
               type='password'
               placeholder='Please enter your password'
-              {...register('password', {required: true },)}
+              {...register('password', { required: true })}
               onChange={handleChange}
               className={'rounded-md w-full p-2 mb-2'}
             />
@@ -85,10 +82,16 @@ export default function AdminPage() {
                 This password field is required
               </span>
             )}
-             {error && <p className='text-red-700 text-xs'>{error}</p>}
+            {error && <p className='text-red-700 text-xs'>{error}</p>}
           </label>
-       
-          <input type='submit' value='Login' className={'w-full bg-blue-700 p-2 rounded-md text-white hover:cursor-pointer hover:bg-blue-500'} />
+
+          <input
+            type='submit'
+            value='Login'
+            className={
+              'w-full bg-blue-700 p-2 rounded-md text-white hover:cursor-pointer hover:bg-blue-500'
+            }
+          />
         </div>
       </form>
     </div>

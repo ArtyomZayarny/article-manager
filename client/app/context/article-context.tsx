@@ -7,6 +7,7 @@ type ArticleContextType = {
   articles: IArticle[] | [];
   loading: boolean;
   deleteArticle: (id: string) => void;
+  addArticle: (article: IArticle) => void;
 };
 
 export const ArticlesContext = createContext(
@@ -31,10 +32,18 @@ export const ArticlesContextProvider = ({ children }: Props) => {
     [articles, setArticles]
   );
 
+  const addArticle = useCallback(
+    (article: IArticle) => {
+      setArticles<IArticle[]>((prevArticles) => [...prevArticles, article]);
+    },
+    [setArticles]
+  );
+
   const value = {
     articles,
     loading,
     deleteArticle,
+    addArticle,
   } as unknown as ArticleContextType;
 
   return (
