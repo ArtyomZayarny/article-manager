@@ -1,18 +1,20 @@
 'use client';
-import { AddArticleForm } from '@/app/components/AddArticleForm';
+import { AddArticleButton } from '@/app/components/AddArticleButton';
+import { AddArticleModal } from '@/app/components/AddArticleModal';
 import { ArticleBoard } from '@/app/components/ArticleBoard';
 import { Header } from '@/app/components/Header';
 import { ArticlesContextProvider } from '@/app/context/article-context';
-import Modal from '@mui/material/Modal';
+import {
+  ModalContext,
+  ModalContextProvider,
+} from '@/app/context/modal-context';
 import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 
 export default function AdminBoard() {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const { open, handleOpen, handleClose } = useContext(ModalContext);
 
   const handleLogOut = () => {
     localStorage.removeItem('accessToken');
@@ -43,25 +45,13 @@ export default function AdminBoard() {
           </button>
         </div>
       </Header>
-      <ArticlesContextProvider>
-        <ArticleBoard />
-        <div onClick={handleOpen} 
-       className={'bg-blue-700 hover:bg-blue-500 w-12 h-12 rounded-full flex justify-center items-center hover:cursor-pointer absolute right-10 bottom-10'}>
-            <p className={'font-bold text-white'}>+</p></div>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby='modal-modal-title'
-          aria-describedby='modal-modal-description'
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <AddArticleForm handleClose={handleClose} />
-        </Modal>
-      </ArticlesContextProvider>
+      <ModalContextProvider>
+        <ArticlesContextProvider>
+          <ArticleBoard />
+          <AddArticleButton />
+          <AddArticleModal />
+        </ArticlesContextProvider>
+      </ModalContextProvider>
     </div>
   );
 }
