@@ -1,4 +1,6 @@
 'use client';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { usePathname } from 'next/navigation';
 import { useContext, useMemo, useState } from 'react';
 import { ArticlesContext } from '../context/article-context';
@@ -43,8 +45,8 @@ export const Article = ({ article }: Props) => {
 
       {isAdminPage && (
         <div className={'my-2 justify-between flex'}>
-          <button onClick={() => handleEdit(article.id, values)}>edit</button>
-          <button onClick={() => handleDelete(article.id)}>delete</button>
+          <ModeEditIcon onClick={() => handleEdit(article.id, values)} className={'hover:cursor-pointer'}/>
+          <DeleteIcon onClick={() => handleDelete(article.id)} className={'hover:cursor-pointer'}/>
         </div>
       )}
     </div>
