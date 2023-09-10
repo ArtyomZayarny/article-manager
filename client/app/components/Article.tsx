@@ -2,8 +2,9 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { usePathname } from 'next/navigation';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo } from 'react';
 import { ArticlesContext } from '../context/article-context';
+import { ModalContext } from '../context/modal-context';
 import { fetchData } from '../utils/fetchData';
 
 type Props = {
@@ -15,16 +16,16 @@ type Props = {
 };
 
 export const Article = ({ article }: Props) => {
+  const { title, description } = article;
   const { deleteArticle, articles } = useContext(ArticlesContext);
+  const { open, setOpen, setModalType, setInputs } = useContext(ModalContext);
   const pathname = usePathname();
   const isAdminPage = useMemo(() => pathname.includes('admin'), [pathname]);
 
-  const [values, setValues] = useState({
-    title: '',
-    description: '',
-  });
   const handleEdit = (id, values) => {
-    console.log('edit');
+    setModalType('edit');
+    setInputs({ id, values });
+    setOpen(true);
   };
 
   const handleDelete = async (id) => {
@@ -45,8 +46,14 @@ export const Article = ({ article }: Props) => {
 
       {isAdminPage && (
         <div className={'my-2 justify-between flex'}>
-          <ModeEditIcon onClick={() => handleEdit(article.id, values)} className={'hover:cursor-pointer'}/>
-          <DeleteIcon onClick={() => handleDelete(article.id)} className={'hover:cursor-pointer'}/>
+          <ModeEditIcon
+            onClick={() => handleEdit(article.id, { title, description })}
+            className={'hover:cursor-pointer'}
+          />
+          <DeleteIcon
+            onClick={() => handleDelete(article.id)}
+            className={'hover:cursor-pointer'}
+          />
         </div>
       )}
     </div>
