@@ -1,9 +1,11 @@
-export const fetchData = async (url: string, data: any, method: string) => {
+export const fetchData = async (url: string, method: string, data?: any) => {
+  const accessToken = JSON.parse(localStorage.getItem('accessToken'));
   const res = await fetch(url, {
     method,
-    body: JSON.stringify(data),
+    body: data && JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 
