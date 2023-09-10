@@ -31,6 +31,7 @@ export const AddArticleForm = ({ handleClose }: Props) => {
       try {
         const res = await fetchData('http://localhost:3001/articles', 'POST', {
           ...data,
+          createDateTime: new Date(),
         });
 
         if (res?.statusCode === 401) {
@@ -60,6 +61,7 @@ export const AddArticleForm = ({ handleClose }: Props) => {
           'PATCH',
           {
             ...data,
+            createDateTime: new Date(),
           }
         );
 
