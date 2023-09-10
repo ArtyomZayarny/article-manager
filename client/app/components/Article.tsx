@@ -6,6 +6,7 @@ import { useContext, useMemo } from 'react';
 import { ArticlesContext } from '../context/article-context';
 import { ModalContext } from '../context/modal-context';
 import { fetchData } from '../utils/fetchData';
+import { formatDate } from '../utils/formatDate';
 
 type Props = {
   article: {
@@ -16,7 +17,7 @@ type Props = {
 };
 
 export const Article = ({ article }: Props) => {
-  const { title, description } = article;
+  const { title, description, createDateTime } = article;
   const { deleteArticle, articles } = useContext(ArticlesContext);
   const { open, setOpen, setModalType, setInputs } = useContext(ModalContext);
   const pathname = usePathname();
@@ -56,6 +57,9 @@ export const Article = ({ article }: Props) => {
           />
         </div>
       )}
+      <span className={'inline-flex text-slate-400 text-xs'}>
+        {formatDate(createDateTime)}
+      </span>
     </div>
   );
 };
