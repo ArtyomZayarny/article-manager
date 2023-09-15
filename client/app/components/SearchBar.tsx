@@ -22,7 +22,7 @@ const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
   return (
     <form
      onSubmit={handleSubmit}
-      className='grid w-full max-w-4xl  bg-white rounded-md p-2 shadow-md mt-12
+      className='grid w-full max-w-4xl  bg-white rounded-md p-2 shadow-md 
     flex-1 md:flex-initial'
     >
       <input

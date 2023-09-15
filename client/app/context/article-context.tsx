@@ -1,7 +1,8 @@
-'use client';
-import { IArticle } from '@/types';
-import { createContext, useCallback, useEffect, useState } from 'react';
-import { useArticles } from '../hooks/useArticles';
+"use client";
+import { IArticle } from "@/types";
+import { createContext, useCallback, useEffect, useState } from "react";
+import { useArticles } from "../hooks/useArticles";
+import { sortByDate } from "../utils/sortByDate";
 
 type ArticleContextType = {
   articles: IArticle[] | [];
@@ -13,8 +14,9 @@ type ArticleContextType = {
   searchArticle: (s: string) => void;
   searchString: string;
   setSearchString: (s: string) => void;
-  storedArticles:IArticle[] | [];
-  setStoredArticles: (arg:IArticle[]) => void;
+  storedArticles: IArticle[] | [];
+  setStoredArticles: (arg: IArticle[]) => void;
+  sortArticleByDate: () => void;
 };
 
 export const ArticlesContext = createContext(
@@ -28,14 +30,15 @@ type Props = {
 export const ArticlesContextProvider = ({ children }: Props) => {
   //Manage articles from DB
   const { articles, loading, setArticles } = useArticles();
-  const [storedArticles, setStoredArticles] = useState([])
-  const [searchString, setSearchString] = useState('');
+  const [dateSort, setDateSort] = useState("newest");
+  const [storedArticles, setStoredArticles] = useState([]);
+  const [searchString, setSearchString] = useState("");
 
- useEffect( ()=> {
-    if(articles.length >0) {
-      setStoredArticles(articles)
+  useEffect(() => {
+    if (articles.length > 0) {
+      setStoredArticles(sortByDate(articles));
     }
- },[articles])
+  }, [articles]);
 
   const deleteArticle = useCallback(
     (id: string) => {
@@ -81,6 +84,17 @@ export const ArticlesContextProvider = ({ children }: Props) => {
     [articles, setArticles]
   );
 
+  const sortArticleByDate = useCallback(() => {
+    toggleSortByDate();
+  }, [dateSort, storedArticles]);
+
+  const toggleSortByDate = useCallback(() => {
+    return dateSort === "newest"
+      ? (setDateSort("oldest"),
+        setStoredArticles(sortByDate(articles, "oldest")))
+      : (setDateSort("newest"),
+        setStoredArticles(sortByDate(articles, "newest")));
+  }, [dateSort, storedArticles]);
 
   const value = {
     articles,
@@ -92,7 +106,8 @@ export const ArticlesContextProvider = ({ children }: Props) => {
     searchString,
     setSearchString,
     storedArticles,
-    setStoredArticles
+    setStoredArticles,
+    sortArticleByDate,
   } as unknown as ArticleContextType;
 
   return (
