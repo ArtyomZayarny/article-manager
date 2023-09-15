@@ -10,7 +10,7 @@ export const ArticleBoard = () => {
     if(searchString) {
       searchArticle(searchString)
     }
-  },[searchString])
+  },[searchString, ])
 
   return (
     <div>
