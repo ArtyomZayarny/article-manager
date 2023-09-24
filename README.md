@@ -19,3 +19,9 @@ Run postgres db
 4 from root run yarn start  - it will run server and client
 
 
+To manage task you need to be logged in
+Access for admin
+email: timaz_test@gmail.com
+pass: 1234567890
+
+
