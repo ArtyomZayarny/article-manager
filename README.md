@@ -23,7 +23,7 @@ To manage task you need to be logged in
 
 Access for admin
 
-email: timaz_test@gmail.com
+email: timaz@gmail.com
 
 pass: 1234567890
 
