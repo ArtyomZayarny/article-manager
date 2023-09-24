@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { fetchData } from '../utils/fetchData';
+import { useEffect, useState } from "react";
+import { fetchData } from "../utils/fetchData";
+import { IArticle } from "@/types";
 
 export const useArticles = () => {
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<IArticle[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -10,8 +11,8 @@ export const useArticles = () => {
     async function getArticles() {
       try {
         const articles = await fetchData(
-          'http://localhost:3001/articles',
-          'GET'
+          `https://article-manager-api-jy2y.onrender.com/articles`,
+          "GET"
         );
         articles && setArticles(articles);
       } catch (error) {

@@ -1,9 +1,9 @@
-import { useRouter } from 'next/navigation';
-import { useCallback, useContext, useEffect } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { ArticlesContext } from '../context/article-context';
-import { ModalContext } from '../context/modal-context';
-import { fetchData } from '../utils/fetchData';
+import { useRouter } from "next/navigation";
+import { useCallback, useContext, useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { ArticlesContext } from "../context/article-context";
+import { ModalContext } from "../context/modal-context";
+import { fetchData } from "../utils/fetchData";
 
 type Props = {
   handleClose: () => void;
@@ -29,14 +29,18 @@ export const AddArticleForm = ({ handleClose }: Props) => {
   const handleCreateArticle: SubmitHandler<Inputs> = useCallback(
     async (data) => {
       try {
-        const res = await fetchData('http://localhost:3001/articles', 'POST', {
-          ...data,
-          createDateTime: new Date(),
-        });
+        const res = await fetchData(
+          `https://article-manager-api-jy2y.onrender.com/articles`,
+          "POST",
+          {
+            ...data,
+            createDateTime: new Date(),
+          }
+        );
 
         if (res?.statusCode === 401) {
-          localStorage.removeItem('accessToken');
-          router.push('/admin');
+          localStorage.removeItem("accessToken");
+          router.push("/admin");
           return;
         }
         if (res?.error) {
@@ -57,8 +61,8 @@ export const AddArticleForm = ({ handleClose }: Props) => {
     async (data) => {
       try {
         const res = await fetchData(
-          `http://localhost:3001/articles/${inputs.id}`,
-          'PATCH',
+          `https://article-manager-api-jy2y.onrender.com/articles/${inputs.id}`,
+          "PATCH",
           {
             ...data,
             createDateTime: new Date(),
@@ -66,8 +70,8 @@ export const AddArticleForm = ({ handleClose }: Props) => {
         );
 
         if (res?.statusCode === 401) {
-          localStorage.removeItem('accessToken');
-          router.push('/admin');
+          localStorage.removeItem("accessToken");
+          router.push("/admin");
           return;
         }
         if (res?.error) {
@@ -77,6 +81,9 @@ export const AddArticleForm = ({ handleClose }: Props) => {
         //update articles list in context
         updateArticle(inputs.id, res);
         handleClose();
+        setModalType("add");
+        setValue("title", "");
+        setValue("description", "");
       } catch (error) {
         console.warn(error);
       }
@@ -86,57 +93,57 @@ export const AddArticleForm = ({ handleClose }: Props) => {
 
   useEffect(() => {
     //Prefill fields
-    if (modalType === 'edit') {
-      setValue('title', inputs.values.title);
-      setValue('description', inputs.values.description);
+    if (modalType === "edit") {
+      setValue("title", inputs?.values.title);
+      setValue("description", inputs?.values.description);
     }
-  }, [modalType]);
+  }, [modalType, inputs]);
 
-  const title = modalType === 'add' ? 'Add new article' : 'Edit article';
+  const title = modalType === "add" ? "Add new article" : "Edit article";
 
   const formAction =
-    modalType === 'add' ? handleCreateArticle : handleUpdatArticle;
+    modalType === "add" ? handleCreateArticle : handleUpdatArticle;
   return (
     <form
       onSubmit={handleSubmit(formAction)}
-      className={'w-full max-w-md rounded-md bg-slate-300'}
+      className={"w-full max-w-md rounded-md bg-slate-300"}
     >
-      <div className={'flex flex-col p-8'}>
-        <div className='flex justify-center'>
-          <h2 className={'font-bold center mb-4'}>{title}</h2>
+      <div className={"flex flex-col p-8"}>
+        <div className="flex justify-center">
+          <h2 className={"font-bold center mb-4"}>{title}</h2>
         </div>
-        <label htmlFor='title' className={'mb-8 relative flex flex-col'}>
+        <label htmlFor="title" className={"mb-8 relative flex flex-col"}>
           <input
-            {...register('title', { required: true })}
-            placeholder='Please enter title'
-            className={'rounded-md w-full p-2'}
+            {...register("title", { required: true })}
+            placeholder="Please enter title"
+            className={"rounded-md w-full p-2"}
           />
           {errors.title && (
-            <span className={'text-red-700 text-xs absolute top-12'}>
+            <span className={"text-red-700 text-xs absolute top-12"}>
               This title field is required
             </span>
           )}
         </label>
 
-        <label htmlFor='description' className={'mb-8 relative flex flex-col'}>
+        <label htmlFor="description" className={"mb-8 relative flex flex-col"}>
           <textarea
-            placeholder='Please enter description'
-            {...register('description', { required: true })}
-            className={'rounded-md w-full p-2 mb-2'}
+            placeholder="Please enter description"
+            {...register("description", { required: true })}
+            className={"rounded-md w-full p-2 mb-2"}
           />
 
           {errors.description && (
-            <span className={'text-red-700 text-xs absolute -bottom-6'}>
+            <span className={"text-red-700 text-xs absolute -bottom-6"}>
               This description field is required
             </span>
           )}
         </label>
 
         <input
-          type='submit'
-          value='Publish'
+          type="submit"
+          value="Publish"
           className={
-            'w-full bg-blue-700 p-2 rounded-md text-white hover:cursor-pointer hover:bg-blue-500'
+            "w-full bg-blue-700 p-2 rounded-md text-white hover:cursor-pointer hover:bg-blue-500"
           }
         />
       </div>
