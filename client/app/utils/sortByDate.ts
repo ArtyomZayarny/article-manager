@@ -1,7 +1,9 @@
-export const sortByDate = (data, order = "newest") => {
-  return data.sort((a, b) => {
+import { IArticle } from "@/types";
+
+export const sortByDate = (data: IArticle[], order = "newest") => {
+  return data.sort((a: IArticle, b: IArticle) => {
     return order === "newest"
-      ? new Date(b.createDateTime) - new Date(a.createDateTime)
-      : new Date(a.createDateTime) - new Date(b.createDateTime);
+      ? Number(new Date(b.createDateTime)) - Number(new Date(a.createDateTime))
+      : Number(new Date(a.createDateTime)) - Number(new Date(b.createDateTime));
   });
 };

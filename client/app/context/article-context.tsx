@@ -31,35 +31,40 @@ export const ArticlesContextProvider = ({ children }: Props) => {
   //Manage articles from DB
   const { articles, loading, setArticles } = useArticles();
   const [dateSort, setDateSort] = useState("newest");
-  const [storedArticles, setStoredArticles] = useState([]);
+  const [storedArticles, setStoredArticles] = useState<IArticle[] | null>(null);
   const [searchString, setSearchString] = useState("");
 
   useEffect(() => {
     if (articles.length > 0) {
       setStoredArticles(sortByDate(articles));
     }
+
+    if (articles.length === 0) {
+      setStoredArticles([]);
+    }
   }, [articles]);
 
   const deleteArticle = useCallback(
     (id: string) => {
-      const updatedArticles = articles.filter(
+      const updatedArticles = storedArticles?.filter(
         (article: IArticle) => article.id !== id
       );
-      setArticles(updatedArticles);
+      setStoredArticles(updatedArticles!);
     },
-    [articles, setArticles]
+    [articles, storedArticles]
   );
 
   const addArticle = useCallback(
     (article: IArticle) => {
-      setArticles<IArticle[]>((prevArticles) => [...prevArticles, article]);
+      const updatedArticles = [...storedArticles!, article];
+      setStoredArticles(updatedArticles);
     },
-    [setArticles]
+    [articles, storedArticles]
   );
 
   const updateArticle = useCallback(
-    (id, data) => {
-      const updatedArticles = articles.map((article) => {
+    (id: string, data: IArticle) => {
+      const updatedArticles = storedArticles?.map((article) => {
         if (article.id === id) {
           article.title = data.title;
           article.description = data.description;
@@ -67,21 +72,23 @@ export const ArticlesContextProvider = ({ children }: Props) => {
         }
         return article;
       });
-
-      setArticles(updatedArticles);
+      setStoredArticles(updatedArticles!);
     },
-    [setArticles, articles]
+    [articles, storedArticles]
   );
 
   const searchArticle = useCallback(
     (searchString: string) => {
-      setStoredArticles([
+      const searchArticles = [
         ...articles.filter((article) =>
-          article.title.toLowerCase().includes(searchString.toLowerCase())
+          article.title!.toLowerCase().includes(searchString.toLowerCase())
         ),
-      ]);
+      ];
+      const foundedArticles =
+        searchArticles.length > 0 ? searchArticles : articles;
+      setStoredArticles(foundedArticles);
     },
-    [articles, setArticles]
+    [articles]
   );
 
   const sortArticleByDate = useCallback(() => {
