@@ -20,8 +20,12 @@ Run postgres db
 
 
 To manage task you need to be logged in
+
 Access for admin
+
 email: timaz_test@gmail.com
+
 pass: 1234567890
+
 
 
